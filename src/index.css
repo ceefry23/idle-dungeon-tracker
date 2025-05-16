@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.hide-when-exporting {
+  display: table-cell;
+}
+.exporting-image .hide-when-exporting {
+  display: none !important;
+}
