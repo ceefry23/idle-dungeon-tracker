@@ -260,7 +260,7 @@ function handleExportImage(ref, filename) {
       new Promise((resolve, reject) => {
         // For mobile, set a fixed width for export
         if (window.innerWidth < 800) {
-          ref.current.style.width = "900px";
+          ref.current.style.width = "2000px";
         }
         ref.current.classList.add("exporting-image");
         toPng(ref.current, { cacheBust: true, backgroundColor: "#111827" })
