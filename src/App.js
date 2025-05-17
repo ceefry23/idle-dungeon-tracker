@@ -254,29 +254,41 @@ function handleAddRun(e) {
   }
   // -------------------------------------------
 
-  function handleExportImage(ref, filename) {
-    if (ref.current) {
-      temporarilyExpand(ref, () =>
-        new Promise((resolve, reject) => {
-          ref.current.classList.add("exporting-image");
-          toPng(ref.current, { cacheBust: true, backgroundColor: "#111827" })
-            .then((dataUrl) => {
-              ref.current.classList.remove("exporting-image");
-              const link = document.createElement("a");
-              link.download = `${filename}_${new Date().toISOString().slice(0,10)}.png`;
-              link.href = dataUrl;
-              link.click();
-              resolve();
-            })
-            .catch((err) => {
-              ref.current.classList.remove("exporting-image");
-              alert('Failed to generate image: ' + err.message);
-              reject(err);
-            });
-        })
-      );
-    }
+function handleExportImage(ref, filename) {
+  if (ref.current) {
+    temporarilyExpand(ref, () =>
+      new Promise((resolve, reject) => {
+        // For mobile, set a fixed width for export
+        if (window.innerWidth < 800) {
+          ref.current.style.width = "900px";
+        }
+        ref.current.classList.add("exporting-image");
+        toPng(ref.current, { cacheBust: true, backgroundColor: "#111827" })
+          .then((dataUrl) => {
+            ref.current.classList.remove("exporting-image");
+            // Reset width
+            if (window.innerWidth < 800) {
+              ref.current.style.width = "";
+            }
+            const link = document.createElement("a");
+            link.download = `${filename}_${new Date().toISOString().slice(0,10)}.png`;
+            link.href = dataUrl;
+            link.click();
+            resolve();
+          })
+          .catch((err) => {
+            ref.current.classList.remove("exporting-image");
+            if (window.innerWidth < 800) {
+              ref.current.style.width = "";
+            }
+            alert('Failed to generate image: ' + err.message);
+            reject(err);
+          });
+      })
+    );
   }
+}
+
 
   function filteredRuns() {
     let out = runs;
